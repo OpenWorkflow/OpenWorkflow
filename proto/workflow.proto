@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package openworkflow.workflow;
+
+import "google/protobuf/duration.proto";
+
+/* Workflow represents a directed acyclic graph, which defines the very basic of a workflow.
+ * This is the model the scheduler interprets to create jobs. */
+message Workflow {
+	string workflow_id = 1;
+	string description = 2;
+	uint32 version = 3;
+	// string owner = 4;
+	// string group = 5;
+
+	string schedule = 21;	// cron notation
+	string start_time = 22;	// ISO 8601
+	string end_time = 23;	// ISO 8601
+	//bool catchup = 24;	// Run for the past if start_time is in the past
+	uint32 concurrency = 25;
+	uint32 max_active_runs = 26;
+	google.protobuf.Duration timeout = 27;
+
+	repeated Task Tasks = 31;
+}
+
+enum RunCondition {
+	ALL_DONE = 0;
+	ONE_DONE = 1;
+	ALL_SUCCESS = 2;
+	ONE_SUCCESS = 3;
+	ALL_FAILED = 4;
+	ONE_FAILED = 5;
+}
+
+/* Task represents a task within a workflow, which defines an atomic operation.
+ * This is the model the scheduler interprets to send to an executor. */
+message Task {
+	string task_id = 1;
+	string dag_id = 2;
+	string description = 3;
+	RunCondition condition = 4;
+	repeated string downstream_tasks = 5;	// List of task_id's which will run after this task
+	uint32 retries = 6;
+	google.protobuf.Duration retry_interval = 7;
+	//bool depend_on_past = 8;
+
+	ExecutionEnvironment execution_environment = 11;
+}
+
+
+enum ExecutorKind {
+	LOCAL = 0;
+	//KUBERNETES = 1;
+}
+
+/* ExecutionEnvironment represents instructions to provide the proper environment within
+   a workflow executor.
+*/
+message ExecutionEnvironment {
+	message LocalEnvironment {
+		string command = 1;
+	}
+	/*message KubernetesEnvironment {
+		string repository = 1;
+		string tag = 2;
+		string image_pull_policy = 3;
+		// ToDo: Add volumes, mounts, ...
+	}*/
+
+	ExecutorKind executor_kind = 1;
+	oneof environment {
+		LocalEnvironment local_environment = 2;
+		//KubernetesEnvironment kubernetes_environment = 3;
+	}
+}
