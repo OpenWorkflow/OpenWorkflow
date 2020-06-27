@@ -37,7 +37,7 @@ enum RunCondition {
  * This is the model the scheduler interprets to send to an executor. */
 message Task {
 	string task_id = 1;
-	string dag_id = 2;
+	string workflow_id = 2;
 	string description = 3;
 	RunCondition condition = 4;
 	repeated string downstream_tasks = 5;	// List of task_id's which will run after this task
