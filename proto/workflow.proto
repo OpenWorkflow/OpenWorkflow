@@ -21,7 +21,7 @@ message Workflow {
 	uint32 max_active_runs = 26;
 	google.protobuf.Duration timeout = 27;
 
-	repeated Task Tasks = 31;
+	repeated Task tasks = 31;
 }
 
 enum RunCondition {
