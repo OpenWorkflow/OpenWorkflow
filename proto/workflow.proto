@@ -10,7 +10,7 @@ import "google/protobuf/timestamp.proto";
 message Workflow {
 	string workflow_id = 1;
 	string description = 2;
-	uint32 version = 3;
+	// uint32 version = 3;
 	// string owner = 4;
 	// string group = 5;
 
