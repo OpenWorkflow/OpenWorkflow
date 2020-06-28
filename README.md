@@ -19,9 +19,9 @@ This task can also be automated, if there exists a software which can generate t
 
 ### <a name="workflow"></a>Workflow
 A workflow is a directed acyclic graph (DAG), where each node is a task and each edge is a dependency between those tasks. It is often just called job, DAG, package or many other names. In OpenWorkflow it is called workflow.
-One execution of a workflow for a given schedule is called a `workflow instance`. 
-The unique name of a workflow is called `workflow id`. 
-
+One execution of a workflow for a given schedule is called a `workflow instance`. >
+The unique name of a workflow is called `workflow id`.
+If a scheduler supports versioning, as in tracking changes over time for the same workflow, the definition of a workflow for a specific version is called `workflow version`.
 
 ### <a name="task"></a>Task
 A task is the basic unit of execution within a workflow and a node inside the directed acyclic graph. 
