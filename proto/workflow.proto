@@ -15,8 +15,8 @@ message Workflow {
 	// string group = 5;
 
 	string schedule = 21;	// cron notation
-	Timestamp start_time = 22;	// ISO 8601
-	Timestamp end_time = 23;	// ISO 8601
+	google.protobuf.Timestamp start_time = 22;	// ISO 8601
+	google.protobuf.Timestamp end_time = 23;	// ISO 8601
 	bool catchup = 24;	// Run for the past if start_time is in the past
 	uint32 concurrency = 25;
 	uint32 max_active_runs = 26;
