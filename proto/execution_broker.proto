@@ -46,5 +46,5 @@ message SearchReply {
 service ExecutionBroker {
 	rpc RegisterExecutor (RegistrationRequest) returns (RegistrationReply) {}
 	rpc HeartBeat (Heartbeat) returns (Heartbeat) {}
-	rpc FindExecutor (SearchRequest) returns (RegistrationReply) {}
+	rpc FindExecutor (SearchRequest) returns (SearchReply) {}
 }
