@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package workflow;
+package openworkflow.workflow;
 
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
@@ -66,5 +66,5 @@ message ExecutionEnvironment {
 		// ToDo: Add volumes, mounts, ...
 	}*/
 
-	execution_broker.SearchRequest environment = 1;
+	openworkflow.execution_broker.SearchRequest environment = 1;
 }

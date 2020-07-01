@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package execution_broker;
+package openworkflow.execution_broker;
 
 enum ExecutorKind {
 	LOCAL = 0;
