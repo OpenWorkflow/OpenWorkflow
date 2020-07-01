@@ -1,11 +1,9 @@
 syntax = "proto3";
 
-package openworkflow.workflow;
+package openworkflow;
 
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
-
-import "execution_broker.proto";
 
 /* Workflow represents a directed acyclic graph, which defines the very basic of a workflow.
  * This is the model the scheduler interprets to create jobs. */
@@ -27,6 +25,7 @@ message Workflow {
 	repeated Task tasks = 31;
 }
 
+/* RunCondition determines under what condition a task may start. */
 enum RunCondition {
 	ALL_DONE = 0;
 	ONE_DONE = 1;
@@ -51,20 +50,61 @@ message Task {
 	ExecutionEnvironment execution_environment = 11;
 }
 
+/* Define the kind of executor. */
+enum ExecutorKind {
+	LOCAL = 0;	// run directly on machine that registered
+	//KUBERNETES = 1;	// execute dockerimage as pod
+	//NIX = 2;	// execute nix-pkg defined image
+}
 
-/* ExecutionEnvironment represents instructions to provide the proper environment within
-   a workflow executor.
-*/
-message ExecutionEnvironment {
-	message LocalEnvironment {
-		string command = 1;
+/* LocalSpecification for the ExecutorKind == LOCAL. */
+message LocalSpecification {
+	repeated string packages = 1;
+}
+
+message ExecutorSpecification {
+	oneof specs {
+		LocalSpecification local_spec = 1;
 	}
-	/*message KubernetesEnvironment {
-		string repository = 1;
-		string tag = 2;
-		string image_pull_policy = 3;
-		// ToDo: Add volumes, mounts, ...
-	}*/
+}
 
-	openworkflow.execution_broker.SearchRequest environment = 1;
+message ExecutorDefinition {
+	ExecutorKind kind = 1;
+	ExecutorSpecification specs = 2;
+}
+
+/* RegistrationRequest defines the form of a registration. */
+message RegistrationRequest {
+	string uri = 1;	// How to reach the executor
+	message ExecutorDefinition executor_definition = 2;
+}
+/* RegistrationReply is filled with a unique_id upon registering. */
+message RegistrationReply {
+	string unique_id = 1;
+}
+
+message Heartbeat {
+	string unique_id = 1;
+}
+
+/* SearchRequest for an executor. */
+message SearchRequest {
+	ExecutorDefinition executor_definition = 1;
+	repeated ExecutorSpecification block_list = 5;
+}
+/* SearchReply with a URI of a fitting executor. */
+message SearchReply {
+	string uri = 1;
+}
+
+/* ExecutionBroker accepts executors to register themselves and provides a utility for the scheduler
+   to find fitting executors for its tasks.
+*/
+service ExecutionBroker {
+	/* Register self (an executor) to the ExecutionBroker. */
+	rpc RegisterExecutor (RegistrationRequest) returns (RegistrationReply) {}
+	/* HeartBeat to show you have not timed out. */
+	rpc HeartBeat (Heartbeat) returns (Heartbeat) {}
+	/* FindExecutor to execute a task. */
+	rpc FindExecutor (SearchRequest) returns (SearchReply) {}
 }
