@@ -66,9 +66,5 @@ message ExecutionEnvironment {
 		// ToDo: Add volumes, mounts, ...
 	}*/
 
-	openworkflow.execution_broker.ExecutorKind executor_kind = 1;
-	oneof environment {
-		LocalEnvironment local_environment = 2;
-		//KubernetesEnvironment kubernetes_environment = 3;
-	}
+	SearchRequest environment = 1;
 }
