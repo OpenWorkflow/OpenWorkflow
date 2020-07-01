@@ -125,3 +125,12 @@ service ExecutionBroker {
 	/* FindExecutor to execute a task. */
 	rpc FindExecutor (SearchRequest) returns (SearchReply) {}
 }
+
+message ExecutionOutput {
+	string message = 1;
+}
+
+/* Executor executes tasks. */
+service Executor {
+	rpc ExecuteTask (Task) returns (stream ExecutionOutput) {}
+}
