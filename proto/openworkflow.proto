@@ -47,7 +47,7 @@ message Task {
 	google.protobuf.Duration retry_interval = 7;
 	//bool depend_on_past = 8;
 
-	ExecutionEnvironment execution_environment = 11;
+	Execution execution = 11;
 }
 
 /* Define the kind of executor. */
@@ -57,6 +57,23 @@ enum ExecutorKind {
 	//NIX = 2;	// execute nix-pkg defined image
 }
 
+/* Execution for ExecutorKind == LOCAL. */
+message LocalExecution {
+	string command = 1;
+}
+
+message ExecutionDefinition {
+	oneof exec {
+		LocalExecution local = 1;
+	}
+}
+
+/* Execution defines how to execute a task. */
+message Execution {
+	ExecutorDefinition executor = 1;
+	ExecutionDefinition execution = 2;
+}
+
 /* LocalSpecification for the ExecutorKind == LOCAL. */
 message LocalSpecification {
 	repeated string packages = 1;
@@ -64,7 +81,7 @@ message LocalSpecification {
 
 message ExecutorSpecification {
 	oneof specs {
-		LocalSpecification local_spec = 1;
+		LocalSpecification local = 1;
 	}
 }
 
