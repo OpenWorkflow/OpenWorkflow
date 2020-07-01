@@ -66,5 +66,5 @@ message ExecutionEnvironment {
 		// ToDo: Add volumes, mounts, ...
 	}*/
 
-	SearchRequest environment = 1;
+	execution_broker.SearchRequest environment = 1;
 }
