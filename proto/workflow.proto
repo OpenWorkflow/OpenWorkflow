@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package openworkflow.workflow;
+package workflow;
 
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
