@@ -126,9 +126,17 @@ service ExecutionBroker {
 	rpc FindExecutor (SearchRequest) returns (SearchReply) {}
 }
 
+enum ExecutionStatus {
+	UNDEFINED = 0;
+	RUNNING = 1;
+	SUCCESS = 2;
+	FAILED = 3;
+}
+
 message ExecutionOutput {
-	string message = 1;
-	repeated string args = 2;
+	ExecutionStatus status = 1;
+	string message = 2;
+	repeated string args = 3;
 }
 
 /* Executor executes tasks. */
