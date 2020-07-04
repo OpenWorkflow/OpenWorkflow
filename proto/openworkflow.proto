@@ -127,7 +127,7 @@ service ExecutionBroker {
 }
 
 enum ExecutionStatus {
-	UNDEFINED = 0;
+	INITIALIZING = 0;
 	RUNNING = 1;
 	SUCCESS = 2;
 	FAILED = 3;
@@ -136,7 +136,6 @@ enum ExecutionStatus {
 message ExecutionOutput {
 	ExecutionStatus status = 1;
 	string message = 2;
-	repeated string args = 3;
 }
 
 /* Executor executes tasks. */
