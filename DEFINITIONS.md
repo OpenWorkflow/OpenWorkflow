@@ -62,14 +62,3 @@ This can, for example, be a defined domain-specific language (DSL) or a visual e
 
 ## <a name="broker"></a>Execution Broker
 A workflow broker is a piece of software which helps the scheduler find the correct executor for the given runtime environment of a workflow's task.
-
-# Motivation
-OpenWorkflows has two goals:
-1. Define an open standard for the workings of schedulers and workflow management engines such that it becomes easier to communicate our concepts between different fields of data processing and IT.
-2. Enhance comparability between engines by knowing to which version or features of OpenWorkflow they adhere.
-
-This can be achieved as this standard will, just like the software itself, evolve over time.
-
-# Reality Check
-This is a lot of different pieces of software defined in OpenWorkflow. Do you actually need all of them? 
-The short answer is no, you don't. First of all, most workflow management engines today are a all-in-one bundle, meaning most (or all) of the functionality is embedded into one application. This does not mean they don't comply with OpenWorkflow. Secondly, this should just make all the moving parts of a workflow management engine transparent. How they are implemented and coupled or decoupled is up to the software's authors. And lastly, you only need what you need. Don't try to solve problems which you _might_ have, but try to solve problems which you have. OpenWorkflow is a standard trying to encompass as many features as possible, while still remaining flexible. This does not mean everybody needs all of those features in their workflow management engine.
