@@ -30,6 +30,6 @@ protoc -I=./OpenWorkflow/proto/ --python_out=src/ ./OpenWorkflow/proto/openworkf
 ```
 
 ## Contribute
-Right now I'm still working on the first version, so if you want to contribute it's best you open some issues or share this repository (in relation to the proto files). 
-If you have anything to add to the textual documentation, feel free to open a PR. Although that is also still under development. 
+Right now I'm still working on the first version, so if you want to contribute it's best you open some issues or share this repository. 
+Also, if you have anything to add to the textual documentation, feel free to open a PR. Just keep in mind that it is also still under heavy development. 
 Once the first release is done, and if there is enough interest by other people, I want to open the development of this to a broader audience and I hope for some acceptance and other picking up on it.
