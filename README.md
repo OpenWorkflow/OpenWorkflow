@@ -8,7 +8,7 @@ Additionally, services are defined which define a distributed workflow managemen
 
 ## Version
 OpenWorkflow follows [SemVer](https://semver.org/). 
-Right now it's in development for a PoC and in version `0.1.0`. 
+Right now it's in development for a PoC and in version `0.2.0`. 
 It's still rapidly changing until the first major release.
 
 ## Structure

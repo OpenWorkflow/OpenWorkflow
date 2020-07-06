@@ -8,18 +8,20 @@ import "google/protobuf/timestamp.proto";
 /* Workflow represents a directed acyclic graph, which defines the very basic of a workflow.
  * This is the model the scheduler interprets to create jobs. */
 message Workflow {
-	string workflow_id = 1;
+	string workflow_id = 1;	// Unique Id for the workflow
 	string description = 2;
-	// uint32 version = 3;
-	// string owner = 4;
-	// string group = 5;
+	string workflow_bundle_id = 3;	// Used to group workflows (and for filtering when using multiple schedulers)
 
-	string schedule = 21;	// cron notation
-	google.protobuf.Timestamp start_time = 22;	// ISO 8601
-	google.protobuf.Timestamp end_time = 23;	// ISO 8601
+	// RBAC (TBD)
+	// string owner = 5;
+	// string group = 6;
+
+	string schedule = 21;	// cron notation - Should this become its own message?
+	google.protobuf.Timestamp start_time = 22;
+	google.protobuf.Timestamp end_time = 23;
 	bool catchup = 24;	// Run for the past if start_time is in the past
-	uint32 concurrency = 25;
-	uint32 max_active_runs = 26;
+	uint32 concurrency = 25;	// Max parallel tasks within one execution instance
+	uint32 max_active_runs = 26;	// Max parallel workflow instances
 	google.protobuf.Duration timeout = 27;
 
 	repeated Task tasks = 31;
@@ -39,7 +41,7 @@ enum RunCondition {
  * This is the model the scheduler interprets to send to an executor. */
 message Task {
 	string task_id = 1;
-	string workflow_id = 2;
+	string workflow_id = 2;	// Remove?
 	string description = 3;
 	RunCondition condition = 4;
 	repeated string downstream_tasks = 5;	// List of task_id's which will run after this task
@@ -57,39 +59,35 @@ enum ExecutorKind {
 	//NIX = 2;	// execute nix-pkg defined image
 }
 
-/* Execution for ExecutorKind == LOCAL. */
+/* ExecutorKind == LOCAL. */
 message LocalExecution {
 	string command = 1;
+	repeated string args = 2;
 }
 
-message ExecutionDefinition {
-	oneof exec {
-		LocalExecution local = 1;
-	}
+message LocalSpecification {
+	repeated string packages = 1;
 }
 
 /* Execution defines how to execute a task. */
 message Execution {
 	ExecutorDefinition executor = 1;
-	ExecutionDefinition execution = 2;
+	oneof exec {
+		LocalExecution local = 2;
+	}
+	// oneof setup {}	// What to do before running
+	// oneof post {}	// What to do after running
 }
 
-/* LocalSpecification for the ExecutorKind == LOCAL. */
-message LocalSpecification {
-	repeated string packages = 1;
-}
-
-message ExecutorSpecification {
+/* ExecutorSpecification for the different ExecutorKind. */
+message ExecutorDefinition {
+	ExecutorKind kind = 1;
 	oneof specs {
-		LocalSpecification local = 1;
+		LocalSpecification local = 2;
 	}
 }
 
-message ExecutorDefinition {
-	ExecutorKind kind = 1;
-	ExecutorSpecification specs = 2;
-}
-
+/* ===== ExecutionBroker ===== */
 /* RegistrationRequest defines the form of a registration. */
 message RegistrationRequest {
 	string uri = 1;	// How to reach the executor
@@ -107,7 +105,7 @@ message Heartbeat {
 /* SearchRequest for an executor. */
 message SearchRequest {
 	ExecutorDefinition executor_definition = 1;
-	repeated ExecutorSpecification block_list = 5;
+	// repeated <something> block_list = 3;	// Define things to exclude
 }
 /* SearchReply with a URI of a fitting executor. */
 message SearchReply {
@@ -126,6 +124,12 @@ service ExecutionBroker {
 	rpc FindExecutor (SearchRequest) returns (SearchReply) {}
 }
 
+/* ===== Executor ===== */
+message ExecutionInstance {
+	string unique_id = 1;
+}
+
+/* Current status of a task's execution. */
 enum ExecutionStatus {
 	INITIALIZING = 0;
 	RUNNING = 1;
@@ -133,12 +137,17 @@ enum ExecutionStatus {
 	FAILED = 3;
 }
 
+/* Output from the task. */
 message ExecutionOutput {
 	ExecutionStatus status = 1;
 	string message = 2;
+	//OutputPipe out = 3;	// Where was the message written
 }
 
 /* Executor executes tasks. */
 service Executor {
-	rpc ExecuteTask (Task) returns (stream ExecutionOutput) {}
+	/* Registers a task, (start its setup phase) and return a unique identifier. */
+	rpc RegisterTask (Execution) returns (ExecutionInstance) {}
+	/* Execute a task and stream the output. */
+	rpc ExecuteTask (ExecutionInstance) returns (stream ExecutionOutput) {}
 }
