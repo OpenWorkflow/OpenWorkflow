@@ -16,15 +16,15 @@ message Workflow {
 	// string owner = 5;
 	// string group = 6;
 
-	string schedule = 21;	// cron notation - Should this become its own message?
-	google.protobuf.Timestamp start_time = 22;
-	google.protobuf.Timestamp end_time = 23;
-	bool catchup = 24;	// Run for the past if start_time is in the past
-	uint32 concurrency = 25;	// Max parallel tasks within one execution instance
-	uint32 max_active_runs = 26;	// Max parallel workflow instances
-	google.protobuf.Duration timeout = 27;
+	string schedule = 11;	// cron notation - Should this become its own message?
+	google.protobuf.Timestamp start_time = 12;
+	google.protobuf.Timestamp end_time = 13;
+	bool catchup = 14;	// Run for the past if start_time is in the past
+	uint32 concurrency = 15;	// Max parallel tasks within one execution instance
+	uint32 max_active_runs = 16;	// Max parallel workflow instances
+	google.protobuf.Duration timeout = 17;
 
-	repeated Task tasks = 31;
+	repeated Task tasks = 20;
 }
 
 /* RunCondition determines under what condition a task may start. */
