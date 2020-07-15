@@ -29,7 +29,7 @@ message Workflow {
 
 /* RunCondition determines under what condition a task may start. */
 enum RunCondition {
-	NOTHING = 0;
+	NONE = 0;
 	ALL_DONE = 1;
 	ONE_DONE = 2;
 	ALL_SUCCESS = 3;
