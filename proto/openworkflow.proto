@@ -136,6 +136,8 @@ enum ExecutionStatus {
 	RUNNING = 1;
 	SUCCESS = 2;
 	FAILED = 3;
+	UPSTREAMFAILED = 4;
+	SKIPPED = 5;
 }
 
 /* Output from the task. */
